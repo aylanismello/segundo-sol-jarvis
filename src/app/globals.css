@@ -39,3 +39,47 @@ a {
 a:hover {
   color: #ffd08a;
 }
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, serif;
+}
+
+.field {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(0, 0, 0, 0.24);
+  padding: 0.85rem 1rem;
+  color: #fff4df;
+  outline: none;
+}
+
+.field::placeholder {
+  color: rgba(248, 216, 168, 0.38);
+}
+
+.field:focus {
+  border-color: rgba(255, 189, 112, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.12);
+}
+
+.button {
+  border-radius: 999px;
+  background: #fff4df;
+  padding: 0.9rem 1.25rem;
+  color: #1b0d08;
+  font-weight: 700;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 35px rgba(255, 244, 223, 0.2);
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
