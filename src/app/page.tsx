@@ -10,13 +10,13 @@ export default async function Home() {
 
   return <Shell><Page>
     <div className="grid gap-3 xl:grid-cols-[420px_1fr]">
-      <Panel red className="p-5 sm:p-8 xl:sticky xl:top-5 xl:h-[calc(100vh-2.5rem)]">
-        <p className="text-sm font-black uppercase tracking-[.22em] text-black/60">episode stack</p>
-        <h1 className="mt-4 font-serif text-[4.4rem] font-black leading-[.78] tracking-[-.08em] text-black sm:text-[6.5rem]">make one. open one. build one.</h1>
-        <form action={addEpisode} className="mt-8 grid gap-2">
+      <Panel red className="p-4 sm:p-7 xl:sticky xl:top-5 xl:h-[calc(100vh-2.5rem)]">
+        <p className="text-xs font-black uppercase tracking-[.2em] text-black/60">episode stack</p>
+        <h1 className="mt-4 max-w-md font-serif text-[3.15rem] font-black leading-[.82] tracking-[-.075em] text-black sm:text-[5.4rem]">make one. open one. build one.</h1>
+        <p className="mt-5 max-w-sm text-sm font-bold leading-6 text-black/60">front door = episodes. create a blank episode, then work inside that episode only.</p>
+        <form action={addEpisode} className="mt-6 grid gap-2">
           <Input name="episode_number" placeholder="episode # optional" />
           <Input name="title" placeholder="optional name / leave blank" />
-          <div className="grid grid-cols-2 gap-2"><Input name="planning_start" type="date" /><Input name="planning_end" type="date" /></div>
           <input type="hidden" name="status" value="planning" />
           <button className="button border-black bg-black text-[#ff3826] hover:border-white hover:bg-white">new episode</button>
         </form>

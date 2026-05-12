@@ -98,3 +98,8 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .counter { font-size: 2.2rem; }
   select.field { min-width: 0; }
 }
+
+@media (max-width: 640px) {
+  .field { min-height: 54px; }
+  .button { min-height: 54px; }
+}
