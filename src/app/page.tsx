@@ -51,37 +51,37 @@ export default async function Home() {
     <main className="min-h-screen bg-[#120d09] text-[#fff4df]">
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(255,156,67,.28),transparent_30%),radial-gradient(circle_at_90%_12%,rgba(14,126,112,.18),transparent_28%),linear-gradient(135deg,#120d09,#24120b_52%,#3a160d)]" />
       <div className="relative grid min-h-screen grid-cols-1 lg:grid-cols-[280px_1fr]">
-        <aside className="border-b border-white/10 bg-black/25 p-5 backdrop-blur-xl lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r">
+        <aside className="sticky top-0 z-30 border-b border-white/10 bg-[#120d09]/88 p-3 backdrop-blur-2xl lg:h-screen lg:border-b-0 lg:border-r lg:bg-black/25 lg:p-5">
           <div className="flex items-center gap-3">
-            <div className="grid size-11 place-items-center rounded-2xl bg-[#ff9f43] text-[#190b05] shadow-[0_0_42px_rgba(255,159,67,.4)]">☀︎</div>
+            <div className="grid size-10 place-items-center rounded-2xl bg-[#ff9f43] text-[#190b05] shadow-[0_0_42px_rgba(255,159,67,.4)] lg:size-11">☀︎</div>
             <div>
-              <p className="text-xs uppercase tracking-[0.34em] text-[#f4c888]/55">Segundo Sol</p>
-              <h1 className="font-serif text-2xl">Jarvis</h1>
+              <p className="text-[10px] uppercase tracking-[0.28em] text-[#f4c888]/55 lg:text-xs lg:tracking-[0.34em]">Segundo Sol</p>
+              <h1 className="font-serif text-xl lg:text-2xl">Jarvis</h1>
             </div>
           </div>
 
-          <nav className="mt-10 grid gap-2 text-sm text-[#f8d8a8]/70">
+          <nav className="mt-3 hidden gap-2 overflow-x-auto pb-1 text-sm text-[#f8d8a8]/70 lg:mt-10 lg:grid lg:overflow-visible lg:pb-0">
             {["Cockpit", "Track intake", "PicoDrops", "Inspiration diary", "Episodes", "Candidate board"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-")}`} className="rounded-2xl px-4 py-3 hover:bg-white/10 hover:text-[#ffd08a]">
+              <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-")}`} className="shrink-0 rounded-2xl px-4 py-3 hover:bg-white/10 hover:text-[#ffd08a]">
                 {item}
               </a>
             ))}
           </nav>
 
-          <div className="mt-10 rounded-3xl border border-[#ffbd70]/20 bg-[#ffbd70]/10 p-4">
+          <div className="mt-10 hidden rounded-3xl border border-[#ffbd70]/20 bg-[#ffbd70]/10 p-4 lg:block">
             <p className="text-xs uppercase tracking-[0.25em] text-[#ffcf91]/60">database</p>
             <p className="mt-2 text-sm leading-6 text-[#f8d8a8]/70">azorean-base · jarvis_* tables · server actions writing directly to Supabase.</p>
           </div>
         </aside>
 
-        <section className="p-4 sm:p-6 xl:p-8">
-          <header id="cockpit" className="rounded-[2rem] border border-white/10 bg-black/25 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-7">
+        <section className="p-3 sm:p-5 xl:p-8">
+          <header id="cockpit" className="rounded-[1.35rem] border border-white/10 bg-black/25 p-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:rounded-[2rem] sm:p-7">
             <div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-end">
               <div>
                 <p className="text-xs uppercase tracking-[0.35em] text-[#ffbd70]/60">working cockpit</p>
-                <h2 className="mt-3 max-w-4xl font-serif text-5xl leading-none tracking-[-0.04em] sm:text-6xl">Plan the next crate from real tracks, real sets, real database state.</h2>
+                <h2 className="mt-3 max-w-4xl font-serif text-4xl leading-[0.95] tracking-[-0.04em] sm:text-6xl">Plan the next crate from real tracks, real sets, real database state.</h2>
               </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:min-w-[520px]">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:min-w-[520px]">
                 <Stat value={tracks.length} label="tracks" />
                 <Stat value={mustPlay} label="must play" />
                 <Stat value={downloaded} label="PicoDrops" />
@@ -90,8 +90,8 @@ export default async function Home() {
             </div>
           </header>
 
-          <div className="mt-5 grid gap-5 xl:grid-cols-[1.15fr_.85fr]">
-            <section id="track-intake" className="rounded-[2rem] border border-white/10 bg-[#1b100b]/78 p-5 backdrop-blur-xl">
+          <div className="mt-3 grid gap-3 sm:mt-5 sm:gap-5 xl:grid-cols-[1.15fr_.85fr]">
+            <section id="track-intake" className="rounded-[1.35rem] border border-white/10 bg-[#1b100b]/78 p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
               <SectionTitle eyebrow="track intake" title="Add a discovery without leaving selector brain." />
               <form action={addTrack} className="mt-5 grid gap-3 md:grid-cols-2">
                 <Input name="artist" placeholder="Artist" required />
@@ -110,7 +110,7 @@ export default async function Home() {
               </form>
             </section>
 
-            <section id="inspiration-diary" className="rounded-[2rem] border border-white/10 bg-[#1b100b]/78 p-5 backdrop-blur-xl">
+            <section id="inspiration-diary" className="rounded-[1.35rem] border border-white/10 bg-[#1b100b]/78 p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
               <SectionTitle eyebrow="inspiration diary" title="Latest YouTube / SoundCloud sets feeding the direction." />
               <form action={addInspirationSet} className="mt-5 grid gap-3">
                 <Input name="title" placeholder="Set / mix title" required />
@@ -123,8 +123,8 @@ export default async function Home() {
             </section>
           </div>
 
-          <div className="mt-5 grid gap-5 xl:grid-cols-[.9fr_1.1fr]">
-            <section id="episodes" className="rounded-[2rem] border border-white/10 bg-black/25 p-5 backdrop-blur-xl">
+          <div className="mt-3 grid gap-3 sm:mt-5 sm:gap-5 xl:grid-cols-[.9fr_1.1fr]">
+            <section id="episodes" className="rounded-[1.35rem] border border-white/10 bg-black/25 p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
               <SectionTitle eyebrow="episodes" title="Create planning windows and playlists." />
               <form action={addEpisode} className="mt-5 grid gap-3 sm:grid-cols-2">
                 <Input name="episode_number" placeholder="Episode #" />
@@ -147,7 +147,7 @@ export default async function Home() {
               </div>
             </section>
 
-            <section id="candidate-board" className="rounded-[2rem] border border-white/10 bg-black/25 p-5 backdrop-blur-xl">
+            <section id="candidate-board" className="rounded-[1.35rem] border border-white/10 bg-black/25 p-4 backdrop-blur-xl sm:rounded-[2rem] sm:p-5">
               <SectionTitle eyebrow="candidate board" title={activeEpisode ? `Build: ${activeEpisode.title}` : "Pick tracks for the next crate."} />
               <form action={addCandidate} className="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
                 <select name="episode_id" className="field" required defaultValue={activeEpisode?.id ?? ""}>
@@ -175,7 +175,7 @@ export default async function Home() {
             </section>
           </div>
 
-          <section id="picodrops" className="mt-5 rounded-[2rem] border border-white/10 bg-[#1b100b]/78 p-5 backdrop-blur-xl">
+          <section id="picodrops" className="mt-3 rounded-[1.35rem] border border-white/10 bg-[#1b100b]/78 p-4 backdrop-blur-xl sm:mt-5 sm:rounded-[2rem] sm:p-5">
             <SectionTitle eyebrow="PicoDrops sync layer" title="Downloaded files are first-class, not decoration." />
             <div className="mt-5 grid gap-3 md:grid-cols-3">
               {tracks.flatMap((track) => (track.jarvis_picodrops_files ?? []).map((file) => ({ track, file }))).map(({ track, file }) => (
@@ -189,7 +189,7 @@ export default async function Home() {
             </div>
           </section>
 
-          <section className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <section className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {inspirationSets.map((set) => (
               <a key={set.id} href={set.url} target="_blank" rel="noreferrer" className="rounded-[2rem] border border-white/10 bg-white/[0.055] p-5 hover:border-[#ffbd70]/40">
                 <p className="text-xs uppercase tracking-[0.28em] text-[#ffbd70]/55">{set.source_type}</p>
