@@ -1,37 +1,51 @@
 import Link from "next/link";
-import { addCandidate, addEpisode, attachInspirationToEpisode } from "./actions";
+import { addEpisode } from "./actions";
 import { getJarvisData } from "@/lib/jarvis";
-import { attachedInspo, countCandidates, Empty, EpisodeCard, episodeLabel, Input, MixCard, Page, Panel, Shell, Stat, Title, TrackCard } from "@/components/jarvis-ui";
+import { countCandidates, Empty, episodeLabel, Input, Page, Panel, Shell } from "@/components/jarvis-ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const data = await getJarvisData().catch(() => ({ tracks: [], inspirationSets: [], episodes: [] }));
-  const { tracks, inspirationSets, episodes } = data;
-  const activeEpisode = episodes.find((episode) => episode.status === "planning") ?? episodes[0];
-  const episodeInspo = attachedInspo(activeEpisode) ?? [];
-  const downloaded = tracks.filter((track) => (track.jarvis_picodrops_files?.length ?? 0) > 0).length;
+  const { episodes } = await getJarvisData().catch(() => ({ tracks: [], inspirationSets: [], episodes: [] }));
 
   return <Shell><Page>
-    <div className="grid gap-3 xl:grid-cols-[1.25fr_.75fr]">
-      <Panel red className="min-h-[420px] p-4 sm:p-6 lg:p-8">
-        <div className="flex flex-wrap items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-black/70"><span className="bg-black px-2 py-1 text-[#ff3826]">now planning</span><span>{activeEpisode?.status.replace("_", " ") ?? "create one"}</span></div>
-        <div className="mt-12"><p className="text-sm font-black uppercase tracking-[0.25em] text-black/55">current workspace</p><h1 className="mt-2 max-w-5xl font-serif text-[4.5rem] font-black leading-[0.82] tracking-[-0.08em] text-black sm:text-[7rem] lg:text-[9rem]">{episodeLabel(activeEpisode)}</h1></div>
-        <div className="mt-8 grid gap-2 sm:grid-cols-4"><Stat dark value={countCandidates(activeEpisode)} label="candidates" /><Stat dark value={countCandidates(activeEpisode, "selected")} label="selected" /><Stat dark value={episodeInspo.length} label="mix refs" /><Stat dark value={downloaded} label="drops" /></div>
+    <div className="grid gap-3 xl:grid-cols-[420px_1fr]">
+      <Panel red className="p-5 sm:p-8 xl:sticky xl:top-5 xl:h-[calc(100vh-2.5rem)]">
+        <p className="text-sm font-black uppercase tracking-[.22em] text-black/60">episode stack</p>
+        <h1 className="mt-4 font-serif text-[4.4rem] font-black leading-[.78] tracking-[-.08em] text-black sm:text-[6.5rem]">make one. open one. build one.</h1>
+        <form action={addEpisode} className="mt-8 grid gap-2">
+          <Input name="episode_number" placeholder="episode # optional" />
+          <Input name="title" placeholder="optional name / leave blank" />
+          <div className="grid grid-cols-2 gap-2"><Input name="planning_start" type="date" /><Input name="planning_end" type="date" /></div>
+          <input type="hidden" name="status" value="planning" />
+          <button className="button border-black bg-black text-[#ff3826] hover:border-white hover:bg-white">new episode</button>
+        </form>
       </Panel>
-      <Panel className="grid content-between gap-4 p-4 sm:p-6">
-        <div><p className="label">what next?</p><Title>Choose the room.</Title></div>
-        <div className="grid gap-2"><Link className="button text-center" href="/episodes">work episode</Link><Link className="button text-center" href="/inspo">manage inspo pile</Link><Link className="button text-center" href="/tracks">track / PicoDrops library</Link></div>
-      </Panel>
-    </div>
 
-    <div className="mt-3 grid gap-3 xl:grid-cols-3">
-      <Panel className="p-4 sm:p-6"><p className="label">create episode</p><form action={addEpisode} className="mt-4 grid gap-2"><Input name="episode_number" placeholder="episode # optional" /><Input name="title" placeholder="optional title / leave blank" /><select name="status" className="field"><option value="planning">planning</option><option value="crate_built">crate built</option><option value="recorded">recorded</option><option value="published">published</option></select><button className="button">new episode</button></form></Panel>
-      <Panel className="p-4 sm:p-6"><p className="label">attach inspo to current episode</p><form action={attachInspirationToEpisode} className="mt-4 grid gap-2"><select name="episode_id" className="field" required defaultValue={activeEpisode?.id ?? ""}><option value="" disabled>episode</option>{episodes.map((episode) => <option key={episode.id} value={episode.id}>{episodeLabel(episode)}</option>)}</select><select name="inspiration_set_id" className="field" required><option value="">mix from inspo pile</option>{inspirationSets.map((set) => <option key={set.id} value={set.id}>{set.title}</option>)}</select><button className="button">attach mix</button></form></Panel>
-      <Panel className="p-4 sm:p-6"><p className="label">send track to episode</p><form action={addCandidate} className="mt-4 grid gap-2"><select name="episode_id" className="field" required defaultValue={activeEpisode?.id ?? ""}><option value="" disabled>episode</option>{episodes.map((episode) => <option key={episode.id} value={episode.id}>{episodeLabel(episode)}</option>)}</select><select name="track_id" className="field" required><option value="">track</option>{tracks.map((track) => <option key={track.id} value={track.id}>{track.artist} — {track.title}</option>)}</select><button className="button">add candidate</button></form></Panel>
+      <section className="grid content-start gap-3">
+        <div className="border border-white/15 bg-[#101010] p-4 sm:p-5">
+          <p className="label">all episodes</p>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-white/55">this is the front door. create an episode, then open it into its own workspace for mixes, tracks, candidates, and PicoDrops.</p>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
+          {episodes.map((episode) => (
+            <Link key={episode.id} href={`/episodes/${episode.id}`} className="group min-h-64 border border-white/15 bg-[#0d0d0d] p-5 hover:border-[#ff3826] hover:bg-[#ff3826] hover:text-black">
+              <div className="flex items-start justify-between gap-4">
+                <p className="font-mono text-xs font-black uppercase tracking-[.18em] opacity-55">{episode.status.replace("_", " ")}</p>
+                <span className="border border-current px-2 py-1 text-[10px] font-black uppercase tracking-[.16em]">open</span>
+              </div>
+              <h2 className="mt-10 font-serif text-5xl leading-[.86] tracking-[-.06em]">{episodeLabel(episode)}</h2>
+              {episode.title && !episode.title.startsWith("Episode ") && <p className="mt-3 text-sm font-bold opacity-60">{episode.title}</p>}
+              <div className="mt-8 grid grid-cols-3 gap-2 text-center font-mono text-sm font-black">
+                <div className="border border-current/20 p-2"><p className="text-2xl">{countCandidates(episode)}</p><p className="text-[9px] uppercase tracking-[.14em] opacity-55">candidates</p></div>
+                <div className="border border-current/20 p-2"><p className="text-2xl">{countCandidates(episode, "selected")}</p><p className="text-[9px] uppercase tracking-[.14em] opacity-55">selected</p></div>
+                <div className="border border-current/20 p-2"><p className="text-2xl">{episode.jarvis_episode_inspiration_sets?.length ?? 0}</p><p className="text-[9px] uppercase tracking-[.14em] opacity-55">mixes</p></div>
+              </div>
+            </Link>
+          ))}
+          {!episodes.length && <Empty text="No episodes yet. Create one on the left. No name required." />}
+        </div>
+      </section>
     </div>
-
-    <div className="mt-3 grid gap-3 xl:grid-cols-[.7fr_1.3fr]"><Panel className="p-4 sm:p-6"><p className="label">episode stack</p><div className="mt-4 grid gap-2">{episodes.map((episode) => <EpisodeCard key={episode.id} episode={episode} active={episode.id === activeEpisode?.id} />)}{!episodes.length && <Empty text="Create an episode. No name needed." />}</div></Panel><Panel className="p-4 sm:p-6"><p className="label">attached inspiration</p><div className="mt-4 grid gap-2 md:grid-cols-2">{episodeInspo.map((set) => <MixCard key={set.id} set={set} compact />)}{!episodeInspo.length && <Empty text="Attach mixes from the inspo pile so the episode has a mood board." />}</div></Panel></div>
-    <div className="mt-3 grid gap-3 xl:grid-cols-2"><Panel className="p-4 sm:p-6"><p className="label">latest inspo pile</p><div className="mt-4 grid gap-2">{inspirationSets.slice(0,4).map((set) => <MixCard key={set.id} set={set} compact />)}{!inspirationSets.length && <Empty text="No mixes yet." />}</div></Panel><Panel className="p-4 sm:p-6"><p className="label">recent tracks</p><div className="mt-4 grid gap-2">{tracks.slice(0,4).map((track) => <TrackCard key={track.id} track={track} />)}{!tracks.length && <Empty text="No tracks yet." />}</div></Panel></div>
   </Page></Shell>;
 }
