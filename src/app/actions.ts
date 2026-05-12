@@ -103,10 +103,9 @@ export async function addInspirationSet(formData: FormData) {
 
 export async function addEpisode(formData: FormData) {
   const supabase = getJarvisClient();
-  const title = text(formData, "title");
-  if (!title) return;
-
   const episodeNumber = text(formData, "episode_number");
+  const title = text(formData, "title") ?? (episodeNumber ? `Episode ${episodeNumber}` : `Episode ${new Date().toLocaleDateString("en-US")}`);
+
   const { error } = await supabase.from("jarvis_episodes").insert({
     title,
     episode_number: episodeNumber ? Number(episodeNumber) : null,
