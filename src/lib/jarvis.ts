@@ -32,7 +32,13 @@ export type Episode = {
   planning_end: string | null;
   status: "planning" | "crate_built" | "recorded" | "published" | "archived";
   notes: string | null;
+  created_at: string;
   jarvis_episode_candidates?: { status: string; track_id: string }[];
+  jarvis_episode_inspiration_sets?: {
+    inspiration_set_id: string;
+    notes: string | null;
+    jarvis_inspiration_sets: InspirationSet | null;
+  }[];
 };
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -56,27 +62,46 @@ export async function getJarvisData() {
       .from("jarvis_tracks")
       .select("*, jarvis_track_tags(tag), jarvis_track_links(type,url,label), jarvis_picodrops_files(local_path,downloaded_at,source_url)")
       .order("created_at", { ascending: false })
-      .limit(60),
+      .limit(80),
     supabase
       .from("jarvis_inspiration_sets")
       .select("*")
       .order("created_at", { ascending: false })
-      .limit(24),
+      .limit(40),
     supabase
       .from("jarvis_episodes")
       .select("*, jarvis_episode_candidates(status, track_id)")
       .order("episode_number", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false })
-      .limit(20),
+      .limit(30),
   ]);
 
   for (const result of [tracks, inspirationSets, episodes]) {
     if (result.error) throw result.error;
   }
 
+  const episodeRows = (episodes.data ?? []) as Episode[];
+  const episodeInspo = await supabase
+    .from("jarvis_episode_inspiration_sets")
+    .select("episode_id, inspiration_set_id, notes, jarvis_inspiration_sets(*)");
+
+  if (!episodeInspo.error) {
+    for (const episode of episodeRows) {
+      episode.jarvis_episode_inspiration_sets = (episodeInspo.data ?? [])
+        .filter((row) => row.episode_id === episode.id)
+        .map((row) => ({
+          inspiration_set_id: row.inspiration_set_id,
+          notes: row.notes,
+          jarvis_inspiration_sets: Array.isArray(row.jarvis_inspiration_sets)
+            ? (row.jarvis_inspiration_sets[0] ?? null)
+            : row.jarvis_inspiration_sets,
+        })) as unknown as Episode["jarvis_episode_inspiration_sets"];
+    }
+  }
+
   return {
     tracks: (tracks.data ?? []) as Track[],
     inspirationSets: (inspirationSets.data ?? []) as InspirationSet[],
-    episodes: (episodes.data ?? []) as Episode[],
+    episodes: episodeRows,
   };
 }

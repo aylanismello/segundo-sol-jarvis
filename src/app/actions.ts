@@ -139,3 +139,22 @@ export async function addCandidate(formData: FormData) {
   if (error) throw error;
   revalidatePath("/");
 }
+
+export async function attachInspirationToEpisode(formData: FormData) {
+  const supabase = getJarvisClient();
+  const episodeId = text(formData, "episode_id");
+  const inspirationSetId = text(formData, "inspiration_set_id");
+  if (!episodeId || !inspirationSetId) return;
+
+  const { error } = await supabase.from("jarvis_episode_inspiration_sets").upsert(
+    {
+      episode_id: episodeId,
+      inspiration_set_id: inspirationSetId,
+      notes: text(formData, "notes"),
+    },
+    { onConflict: "episode_id,inspiration_set_id" },
+  );
+
+  if (error) throw error;
+  revalidatePath("/");
+}
