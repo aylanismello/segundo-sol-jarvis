@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { getJarvisClient } from "@/lib/jarvis";
 
 function text(formData: FormData, key: string) {
@@ -80,6 +81,7 @@ export async function addTrack(formData: FormData) {
   if (failed?.error) throw failed.error;
 
   revalidatePath("/");
+  revalidatePath("/tracks");
 }
 
 export async function addInspirationSet(formData: FormData) {
@@ -99,6 +101,7 @@ export async function addInspirationSet(formData: FormData) {
 
   if (error) throw error;
   revalidatePath("/");
+  revalidatePath("/inspo");
 }
 
 export async function addEpisode(formData: FormData) {
@@ -106,17 +109,23 @@ export async function addEpisode(formData: FormData) {
   const episodeNumber = text(formData, "episode_number");
   const title = text(formData, "title") ?? (episodeNumber ? `Episode ${episodeNumber}` : `Episode ${new Date().toLocaleDateString("en-US")}`);
 
-  const { error } = await supabase.from("jarvis_episodes").insert({
-    title,
-    episode_number: episodeNumber ? Number(episodeNumber) : null,
-    planning_start: text(formData, "planning_start"),
-    planning_end: text(formData, "planning_end"),
-    status: text(formData, "status") ?? "planning",
-    notes: text(formData, "notes"),
-  });
+  const { data: episode, error } = await supabase
+    .from("jarvis_episodes")
+    .insert({
+      title,
+      episode_number: episodeNumber ? Number(episodeNumber) : null,
+      planning_start: text(formData, "planning_start"),
+      planning_end: text(formData, "planning_end"),
+      status: text(formData, "status") ?? "planning",
+      notes: text(formData, "notes"),
+    })
+    .select("id")
+    .single();
 
   if (error) throw error;
   revalidatePath("/");
+  revalidatePath("/episodes");
+  redirect(`/episodes/${episode.id}`);
 }
 
 export async function addCandidate(formData: FormData) {
@@ -137,6 +146,8 @@ export async function addCandidate(formData: FormData) {
 
   if (error) throw error;
   revalidatePath("/");
+  revalidatePath("/episodes");
+  revalidatePath(`/episodes/${episodeId}`);
 }
 
 export async function attachInspirationToEpisode(formData: FormData) {
@@ -156,4 +167,6 @@ export async function attachInspirationToEpisode(formData: FormData) {
 
   if (error) throw error;
   revalidatePath("/");
+  revalidatePath("/episodes");
+  revalidatePath(`/episodes/${episodeId}`);
 }

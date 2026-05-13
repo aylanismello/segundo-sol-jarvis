@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #f4f0e8;
+  --background: #080705;
+  --foreground: #f4efe4;
 }
 
 @theme inline {
@@ -20,18 +20,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-::selection { background: #ff3826; color: #050505; }
-a { transition: all 160ms ease; }
+::selection { background: #ff4f2e; color: #080705; }
+a { transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease; }
 .font-serif { font-family: var(--font-serif), Georgia, serif; }
 .panel {
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(8,8,8,.82);
-  box-shadow: 0 18px 60px rgba(0,0,0,.38);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 22px;
+  background: rgba(13,12,9,.86);
+  box-shadow: 0 18px 60px rgba(0,0,0,.34);
+  overflow: hidden;
 }
 .panel-red {
-  background: #ff3826;
-  color: #050505;
-  box-shadow: 0 18px 80px rgba(255,56,38,.18);
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ff4f2e 0%, #ff7b45 52%, #ffc456 100%);
+  color: #080705;
+  box-shadow: 0 18px 90px rgba(255,79,46,.2);
+  overflow: hidden;
 }
 .label {
   font-size: 11px;
@@ -60,21 +64,22 @@ a { transition: all 160ms ease; }
   width: 100%;
   min-height: 48px;
   border: 1px solid rgba(255,255,255,.18);
-  border-radius: 0;
-  background: #0b0b0b;
+  border-radius: 14px;
+  background: #12100d;
   padding: .85rem .9rem;
-  color: #f4f0e8;
+  color: #f4efe4;
   outline: none;
   font-size: 16px;
 }
-.field::placeholder { color: rgba(244,240,232,.35); }
-.field:focus { border-color: #ff3826; box-shadow: inset 0 0 0 1px #ff3826; }
+.field::placeholder { color: rgba(244,239,228,.35); }
+.field:focus { border-color: #ff4f2e; box-shadow: inset 0 0 0 1px #ff4f2e; }
 .button {
   min-height: 48px;
-  border: 1px solid #ff3826;
-  background: #ff3826;
+  border: 1px solid #ff4f2e;
+  border-radius: 999px;
+  background: #ff4f2e;
   padding: .85rem 1rem;
-  color: #050505;
+  color: #080705;
   font-size: 12px;
   font-weight: 950;
   text-transform: uppercase;
